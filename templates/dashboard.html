@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="stats">
+<div class="card stat-card">
+<h3>Total Sales</h3>
+<p>₹ {{ total_sales }}</p>
+</div>
+
+<div class="card stat-card">
+<h3>Total Profit</h3>
+<p>₹ {{ total_profit }}</p>
+</div>
+
+<a href="{{ url_for('billing') }}">
+<div class="card stat-card">
+<h3>🧾 Billing</h3>
+<p>Create Bills</p>
+</div>
+</a>
+</div>
+
+{% endblock %}

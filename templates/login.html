@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | Smart Business</title>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        /* extra login-only polish */
+        .login-bg{
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            position:relative;
+        }
+
+        .login-card{
+            width:360px;
+            z-index:2;
+        }
+
+        .login-card h2{
+            text-align:center;
+            margin-bottom:20px;
+        }
+
+        .login-links{
+            text-align:center;
+            margin-top:10px;
+            font-size:14px;
+        }
+
+        .login-links a{
+            color:var(--primary);
+            text-decoration:none;
+            font-weight:500;
+        }
+
+        .login-links a:hover{
+            text-decoration:underline;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- 🌈 background animation -->
+<div class="bg-animation">
+    <span></span><span></span><span></span>
+</div>
+
+<div class="login-bg page">
+
+   
+    <div class="card login-card auth-box">
+        <h2 class="auth-title">🔐 Login</h2>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <p style="color:red;text-align:center;">{{ messages[0] }}</p>
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+
+            <button class="btn" type="submit">Login</button>
+        </form>
+
+        <div class="login-links">
+            <a href="{{ url_for('forgot') }}">Forgot Password?</a><br>
+            <a href="{{ url_for('signup') }}">Create Account</a>
+        </div>
+    </div>
+
+</div>
+
+<!-- 🌙 Theme persistence -->
+<script>
+if(localStorage.getItem("theme")==="dark"){
+    document.body.classList.add("dark");
+}
+</script>
+
+</body>
+</html>

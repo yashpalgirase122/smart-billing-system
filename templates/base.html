@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Smart Billing System{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<!-- 🌈 BACKGROUND -->
+<div class="bg-animation">
+    <span></span><span></span><span></span>
+</div>
+
+<!-- 🚀 NAVBAR (NO PROJECT NAME HERE) -->
+<nav class="navbar">
+    <div class="nav-links">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('billing') }}">Billing</a>
+        <a href="{{ url_for('analytics') }}">Analytics</a>
+        <a href="{{ url_for('prediction') }}">AI Prediction</a>
+        <a href="{{ url_for('admin') }}">Admin</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+</nav>
+
+
+
+<!-- 📦 PAGE CONTENT -->
+<div class="page">
+    {% block content %}{% endblock %}
+</div>
+
+<script src="{{ url_for('static', filename='theme.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- ================= DATE FILTER ================= -->
+<div class="card" style="margin-bottom:20px;">
+  <form method="POST" action="/analytics" style="display:flex;gap:15px;flex-wrap:wrap;">
+    
+    <div>
+      <label>From Date</label><br>
+      <input type="date" name="from_date" value="{{ from_date }}">
+    </div>
+
+    <div>
+      <label>To Date</label><br>
+      <input type="date" name="to_date" value="{{ to_date }}">
+    </div>
+
+    <div>
+      <label>View</label><br>
+   <select name="view">
+  <option value="daily" {{ 'selected' if view=='daily' else '' }}>Daily</option>
+  <option value="monthly" {{ 'selected' if view=='monthly' else '' }}>Monthly</option>
+  <option value="yearly" {{ 'selected' if view=='yearly' else '' }}>Yearly</option>
+</select>
+
+    </div>
+
+    <div style="margin-top:22px;">
+      <button class="btn">Apply</button>
+    </div>
+
+  </form>
+</div>
+
+<!-- ================= DATA HOLDER ================= -->
+<div id="chartData"
+     data-dates='{{ dates | tojson }}'
+     data-sales='{{ sales | tojson }}'
+     data-profit='{{ profit | tojson }}'
+     data-categories='{{ categories | tojson }}'
+     data-category-sales='{{ category_sales | tojson }}'>
+</div>
+
+<!-- ================= SALES / PROFIT / LOSS ================= -->
+<div class="card">
+  <h3>📊 Sales • Profit • Loss</h3>
+  <canvas id="salesChart" height="120"></canvas>
+</div>
+
+<!-- ================= PROFIT vs LOSS ================= -->
+<div class="card" style="margin-top:30px;">
+  <h3>📉 Profit vs Loss (Bar + Line)</h3>
+  <canvas id="profitLossChart" height="120"></canvas>
+</div>
+
+<!-- ================= PRODUCT SALES ================= -->
+<div class="card" style="margin-top:30px;">
+  <h3>📦 Product-wise Sales</h3>
+  <canvas id="productChart" height="120"></canvas>
+</div>
+
+<!-- ================= CHART JS ================= -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const el = document.getElementById("chartData");
+
+// SAFE parsing
+let labels = JSON.parse(el.dataset.dates || "[]");
+const sales  = JSON.parse(el.dataset.sales || "[]");
+const profit = JSON.parse(el.dataset.profit || "[]");
+const categories = JSON.parse(el.dataset.categories || "[]");
+const categorySales = JSON.parse(el.dataset.categorySales || "[]");
+
+// Profit / Loss split
+let profitData = profit.map(v => v > 0 ? v : null);
+let lossData   = profit.map(v => v < 0 ? Math.abs(v) : null);
+
+/* ================= FIX: SINGLE DATA POINT ================= */
+if (labels.length === 1) {
+  labels.push(labels[0] + " ");   // duplicate label
+  profitData.push(profitData[0]);
+  lossData.push(lossData[0]);
+}
+
+/* ================= SALES / PROFIT / LOSS (BAR) ================= */
+new Chart(document.getElementById("salesChart"), {
+  type: "bar",
+  data: {
+    labels,
+    datasets: [
+      {
+        label: "Sales",
+        data: sales,
+        backgroundColor: "#6366f1"
+      },
+      {
+        label: "Profit",
+        data: profit.map(v => v > 0 ? v : 0),
+        backgroundColor: "#22c55e"
+      },
+      {
+        label: "Loss",
+        data: profit.map(v => v < 0 ? Math.abs(v) : 0),
+        backgroundColor: "#ef4444"
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: { y: { beginAtZero: true } }
+  }
+});
+
+/* ================= PROFIT vs LOSS (ONLY LINE) ================= */
+new Chart(document.getElementById("profitLossChart"), {
+  type: "line",
+  data: {
+    labels,
+    datasets: [
+      {
+        label: "Profit",
+        data: profitData,
+        borderColor: "#22c55e",
+        backgroundColor: "#22c55e",
+        borderWidth: 3,
+        tension: 0.4,
+        fill: false,
+        showLine: true,
+        pointRadius: 5
+      },
+      {
+        label: "Loss",
+        data: lossData,
+        borderColor: "#ef4444",
+        backgroundColor: "#ef4444",
+        borderWidth: 3,
+        tension: 0.4,
+        fill: false,
+        showLine: true,
+        pointRadius: 5
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: "top" }
+    },
+    scales: {
+      y: { beginAtZero: true }
+    }
+  }
+});
+
+/* ================= PRODUCT-WISE SALES (PIE) ================= */
+if (categories.length > 0) {
+  new Chart(document.getElementById("productChart"), {
+    type: "pie",
+    data: {
+      labels: categories,
+      datasets: [{
+        data: categorySales,
+        backgroundColor: [
+          "#60a5fa",
+          "#34d399",
+          "#fbbf24",
+          "#f87171",
+          "#a78bfa",
+          "#fb7185"
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: "bottom" }
+      }
+    }
+  });
+}
+</script>
+
+{% endblock %}

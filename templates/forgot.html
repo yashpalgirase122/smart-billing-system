@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Forgot Password</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="card" style="max-width:400px;margin:auto;margin-top:100px;text-align:center;">
+    
+    <h2>🔐 Forgot Password</h2>
+    <p>Enter your registered email</p>
+
+    <form method="POST">
+        <input type="email" name="email" placeholder="Email address" required
+               style="width:100%;padding:10px;margin:10px 0;border-radius:10px;border:none;">
+        
+        <button type="submit">Send OTP</button>
+    </form>
+
+    <p style="margin-top:15px;">
+        <a href="/login" style="color:#ffcccb;">Back to Login</a>
+    </p>
+
+</div>
+
+
+</body>
+</html>

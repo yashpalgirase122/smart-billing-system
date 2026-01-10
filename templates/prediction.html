@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>🤖 AI Sales Prediction</h2>
+<p>Based on historical data & growth trend</p>
+
+<h3>Predicted Total Sales: ₹ {{ predicted_sales }}</h3>
+
+<!-- DATA HOLDER -->
+<div id="aiData"
+     data-months='{{ months | tojson }}'
+     data-trend='{{ trend | tojson }}'
+     data-products='{{ products | tojson }}'
+     data-demand='{{ demand | tojson }}'>
+</div>
+
+<!-- LINE CHART -->
+<div class="card">
+  <h3>📈 Next 6 Months Sales Forecast</h3>
+  <canvas id="lineChart"></canvas>
+</div>
+
+<!-- PRODUCT DEMAND -->
+<div class="card" style="margin-top:30px;">
+  <h3>📦 Product-wise Demand</h3>
+  <canvas id="demandChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const el = document.getElementById("aiData");
+
+const months   = JSON.parse(el.dataset.months || "[]");
+const trend    = JSON.parse(el.dataset.trend || "[]");
+const products = JSON.parse(el.dataset.products || "[]");
+const demand   = JSON.parse(el.dataset.demand || "[]");
+
+/// ================= LINE CHART =================
+new Chart(document.getElementById("lineChart"), {
+  type: "line",
+  data: {
+    labels: months,
+    datasets: [{
+      label: "Predicted Sales",
+      data: trend,
+      borderColor: "#22c55e",
+      backgroundColor: "rgba(34,197,94,0.2)",
+      tension: 0.4,
+      fill: true,
+      pointRadius: 5
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: { beginAtZero: true }
+    }
+  }
+});
+
+/// ================= PRODUCT DEMAND (BAR) =================
+new Chart(document.getElementById("demandChart"), {
+  type: "bar",
+  data: {
+    labels: products,
+    datasets: [{
+      label: "Demand Quantity",
+      data: demand,
+      backgroundColor: "#6366f1"
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: { beginAtZero: true }
+    }
+  }
+});
+</script>
+
+{% endblock %}

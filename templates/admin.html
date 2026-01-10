@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel{% endblock %}
+
+{% block content %}
+
+<!-- ================= ADMIN HEADER ================= -->
+<div class="admin-header">
+    👑 Admin Control Panel
+</div>
+
+<!-- ================= ADMIN NAV ================= -->
+<div class="admin-nav">
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('analytics') }}">Analytics</a>
+    <a href="{{ url_for('prediction') }}">AI Prediction</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+</div>
+
+<div class="admin-container">
+
+    <!-- ================= LOGGED IN USER ================= -->
+    <h2 class="section-title">👤 Logged-in User</h2>
+
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if user %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3">No user data found</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ================= SALES RECORDS ================= -->
+    <h2 class="section-title">🧾 Sales Records</h2>
+
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Sell ₹</th>
+                    <th>Buy ₹</th>
+                    <th>Total ₹</th>
+                    <th>Profit ₹</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if sales %}
+                    {% for s in sales %}
+                    <tr>
+                        <td>{{ s.id }}</td>
+                        <td>{{ s.customer }}</td>
+                        <td>{{ s.product }}</td>
+                        <td>{{ s.quantity }}</td>
+                        <td>{{ s.sell_price }}</td>
+                        <td>{{ s.buy_price }}</td>
+                        <td>{{ s.total }}</td>
+                        <td>{{ s.profit }}</td>
+                        <td>{{ s.date }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="9">No sales records found</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="admin-footer">
+   smart billing system
+</div>
+
+{% endblock %}

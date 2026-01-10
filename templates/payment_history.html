@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Payment History{% endblock %}
+{% block content %}
+
+<div class="card">
+<h2>💳 Payment History – {{ customer }}</h2>
+
+<table>
+<tr>
+<th>Date</th>
+<th>Total</th>
+<th>Paid</th>
+<th>Outstanding</th>
+<th>Status</th>
+</tr>
+
+{% for h in history %}
+<tr>
+<td>{{ h.date }}</td>
+<td>{{ h.total }}</td>
+<td>{{ h.paid_amount }}</td>
+<td>{{ h.outstanding_balance }}</td>
+<td class="{% if h.payment_status=='Paid' %}paid{% else %}unpaid{% endif %}">
+  {{ h.payment_status }}
+</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+{% endblock %}

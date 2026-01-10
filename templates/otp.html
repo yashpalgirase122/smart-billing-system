@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OTP Verification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="light">
+
+<div class="theme-toggle" onclick="toggleTheme()">🌙</div>
+
+<!-- Animated background -->
+<div class="bg-animation">
+    <span></span><span></span><span></span><span></span>
+</div>
+
+<div class="otp-card">
+    <h2>🔐 Verify OTP</h2>
+    <p class="sub">Enter 6 digit OTP sent to your email</p>
+
+   <form method="POST">
+    <input type="text" name="otp" placeholder="Enter OTP" required>
+    <button type="submit">Verify OTP</button>
+</form>
+
+    <p class="resend">Didn’t receive OTP? <span>Resend</span></p>
+</div>
+
+<script src="{{ url_for('static', filename='theme.js') }}"></script>
+<script>
+/* Auto move cursor */
+const inputs = document.querySelectorAll(".otp-inputs input");
+inputs.forEach((input, i) => {
+    input.addEventListener("input", () => {
+        if (input.value && inputs[i+1]) inputs[i+1].focus();
+    });
+});
+</script>
+
+</body>
+</html>

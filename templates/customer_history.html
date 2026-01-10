@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 style="margin-bottom:15px;">
+  🧾 Customer History : {{ customer }}
+</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Product</th>
+      <th>Qty</th>
+      <th>Sell ₹</th>
+      <th>Buy ₹</th>
+      <th>Total ₹</th>
+      <th>Profit ₹</th>
+      <th>Outstanding ₹</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+  {% if history %}
+    {% for row in history %}
+    <tr>
+      <td>{{ row.date }}</td>
+      <td>{{ row.product }}</td>
+      <td>{{ row.quantity }}</td>
+      <td>{{ row.sell_price }}</td>
+      <td>{{ row.buy_price }}</td>
+      <td>{{ row.total }}</td>
+
+     <td class="{% if row.profit < 0 %}loss{% else %}profit{% endif %}">
+  {{ row.profit }}
+</td>
+
+      <td>{{ row.outstanding_balance }}</td>
+
+      <td>
+        {% if row.payment_status == 'Paid' %}
+          <span style="color:green;font-weight:bold;">Paid</span>
+        {% else %}
+          <span style="color:red;font-weight:bold;">Unpaid</span>
+        {% endif %}
+      </td>
+
+      <td>
+        {% if row.payment_status == 'Unpaid' %}
+          <a href="{{ url_for('update_payment', id=row.id, status='Paid') }}"
+             class="btn btn-sm">
+             Mark Paid
+          </a>
+        {% else %}
+          —
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  {% else %}
+    <tr>
+      <td colspan="10" style="text-align:center;">
+        No history found.
+      </td>
+    </tr>
+  {% endif %}
+  </tbody>
+</table>
+
+{% endblock %}

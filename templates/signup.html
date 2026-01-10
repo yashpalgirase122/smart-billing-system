@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Account</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<h2>Create New Account</h2>
+
+<form method="post">
+    <input type="text" name="username" placeholder="Username" required><br><br>
+    <input type="password" name="password" placeholder="Password" required><br><br>
+    <button type="submit">Create Account</button>
+</form>
+
+<p style="color:red">{{ error }}</p>
+
+<a href="/login">Already have account? Login</a>
+
+{% extends "base.html" %}
+{% block title %}signup{% endblock %}
+
+{% block content %}
+<h2>Welcome to Smart Cloth Business</h2>
+<p>Hover over clothes to see interactive animation ✨</p>
+{% endblock %}
+
+
+</body>
+</html>
