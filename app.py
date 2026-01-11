@@ -62,19 +62,35 @@ def customer_history(name):
 @app.route("/customer-search", methods=["GET", "POST"])
 @login_required
 def customer_search():
-    name = request.values.get("customer")
+    customer = request.values.get("customer")
 
     cur = db.cursor(dictionary=True)
-    cur.execute(
-        "SELECT * FROM sales WHERE customer LIKE %s ORDER BY date DESC",
-        (f"%{name}%",)
-    )
-    records = cur.fetchall()
+
+    query = """
+        SELECT
+            id,
+            date,
+            product,
+            quantity,
+            sell_price,
+            buy_price,
+            total,
+            profit,
+            outstanding_balance,
+            payment_status
+        FROM sales
+        WHERE customer LIKE %s
+        ORDER BY date DESC
+    """
+
+    cur.execute(query, (f"%{customer}%",))
+    history = cur.fetchall()
+    cur.close()
 
     return render_template(
         "customer_history.html",
-        customer=name,
-        records=records
+        customer=customer,
+        history=history
     )
 
 
@@ -155,16 +171,21 @@ def login():
     return render_template("login.html")
 
 # ================= SIGNUP =================
-@app.route("/signup", methods=["GET","POST"])
+@app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
         cur = db.cursor()
         cur.execute(
-            "INSERT INTO users(username,email,password) VALUES(%s,%s,%s)",
-            (request.form["username"], request.form["email"], request.form["password"])
+            "INSERT INTO users (username, password) VALUES (%s, %s)",
+            (username, password)
         )
         db.commit()
+
         return redirect(url_for("login"))
+
     return render_template("signup.html")
 
 # ================= LOGOUT =================
@@ -252,28 +273,7 @@ def analytics():
     )
 
 
-    # ================= PRODUCT WISE =================
-    cur.execute("""
-        SELECT product, SUM(quantity) as qty
-        FROM sales
-        GROUP BY product
-    """)
-    prod = cur.fetchall()
-
-    categories = [p["product"] for p in prod]
-    category_sales = [int(p["qty"]) for p in prod]
-
-    return render_template(
-        "analytics.html",
-        dates=dates,
-        sales=sales,
-        profit=profit,
-        categories=categories,
-        category_sales=category_sales,
-        from_date=from_date,
-        to_date=to_date,
-        view=view
-    )
+   
 
 
 # ================= AI PREDICTION =================

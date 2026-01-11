@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 
+<style>
+  .profit { color: green; font-weight: bold; }
+  .loss { color: red; font-weight: bold; }
+</style>
+
 <h2 style="margin-bottom:15px;">
   🧾 Customer History : {{ customer }}
 </h2>
@@ -28,15 +33,15 @@
       <td>{{ row.date }}</td>
       <td>{{ row.product }}</td>
       <td>{{ row.quantity }}</td>
-      <td>{{ row.sell_price }}</td>
-      <td>{{ row.buy_price }}</td>
-      <td>{{ row.total }}</td>
+      <td>₹{{ row.sell_price }}</td>
+      <td>₹{{ row.buy_price }}</td>
+      <td>₹{{ row.total }}</td>
 
-     <td class="{% if row.profit < 0 %}loss{% else %}profit{% endif %}">
-  {{ row.profit }}
-</td>
+      <td class="{% if row.profit < 0 %}loss{% else %}profit{% endif %}">
+        ₹{{ row.profit }}
+      </td>
 
-      <td>{{ row.outstanding_balance }}</td>
+      <td>₹{{ row.outstanding_balance }}</td>
 
       <td>
         {% if row.payment_status == 'Paid' %}
@@ -49,7 +54,7 @@
       <td>
         {% if row.payment_status == 'Unpaid' %}
           <a href="{{ url_for('update_payment', id=row.id, status='Paid') }}"
-             class="btn btn-sm">
+             class="btn btn-sm btn-success">
              Mark Paid
           </a>
         {% else %}
